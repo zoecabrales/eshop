@@ -1,11 +1,24 @@
 import "./App.scss";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Header, Footer } from "./components/index";
+import { Home, Contact, Login, Register, Reset } from "./pages/index";
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <h1>Hello World!!!</h1>
-    </div>
+    <>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/reset" element={<Reset />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </>
   );
-}
+};
 
 export default App;
