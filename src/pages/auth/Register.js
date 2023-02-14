@@ -8,8 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import registerImg from "../../assets/register.png";
 
 // notification
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 // components
 import Card from "../../components/card/Card";
@@ -48,7 +47,6 @@ const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
         setIsLoading(false);
         toast.success("Registration successful...");
         navigate("/login");
@@ -61,7 +59,6 @@ const Register = () => {
 
   return (
     <>
-      <ToastContainer />
       {isLoading && <Loader />}
       <section className={`container ${styles.auth}`}>
         <Card>
