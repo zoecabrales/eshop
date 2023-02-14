@@ -14,15 +14,35 @@ import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 // components
 import Card from "../../components/card/Card";
 
+// firebase utils
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/config";
+
 // css
 import styles from "./auth.module.scss";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const loginUser = (e) => {
+    e.preventDefault();
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
 
   return (
@@ -33,8 +53,16 @@ const Login = () => {
       <Card>
         <div className={styles.form}>
           <h2>Login</h2>
-          <form>
-            <input type="text" placeholder="Email" required />
+          <form onSubmit={loginUser}>
+            <input
+              type="text"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
 
             <div className={styles["password-wrapper"]}>
               <input
@@ -56,7 +84,9 @@ const Login = () => {
               </span>
             </div>
 
-            <button className="--btn --btn-primary --btn-block">Login</button>
+            <button type="submit" className="--btn --btn-primary --btn-block">
+              Login
+            </button>
             <div className={styles.links}>
               <Link to="/reset">Reset Password</Link>
             </div>
