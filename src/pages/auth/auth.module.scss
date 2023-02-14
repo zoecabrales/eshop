@@ -47,6 +47,22 @@
         align-items: center;
         margin-top: 1rem;
       }
+
+      .password-wrapper {
+        position: relative;
+      
+        input {
+          padding-right: 30px;
+        }
+      
+        .password-toggle {
+          position: absolute;
+          top: 50%;
+          right: 10px;
+          transform: translateY(-35%);
+          cursor: pointer;
+        }
+      }
     }
   
     @keyframes slide-up {
@@ -67,6 +83,7 @@
     }
   }
   
+
   @media screen and (max-width: 700px) {
     .img {
       display: none;
