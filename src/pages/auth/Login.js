@@ -12,14 +12,18 @@ import { FaGoogle } from "react-icons/fa";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 
 // notification
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // components
 import Card from "../../components/card/Card";
 
 // firebase utils
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../../firebase/config";
 
 // css
@@ -52,6 +56,19 @@ const Login = () => {
       .catch((error) => {
         toast.error(error.message);
         setIsLoading(false);
+      });
+  };
+
+  const provider = new GoogleAuthProvider();
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        toast.success("Login successful!");
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error(error.message);
       });
   };
 
@@ -104,7 +121,10 @@ const Login = () => {
               </div>
               <p>-- or --</p>
             </form>
-            <button className="--btn --btn-danger --btn-block">
+            <button
+              className="--btn --btn-danger --btn-block"
+              onClick={signInWithGoogle}
+            >
               <FaGoogle size={20} />
               &nbsp;Login with Google
             </button>
