@@ -13,12 +13,15 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/config";
 
 // notif
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // state management
 import { useDispatch } from "react-redux";
-import { SET_ACTIVE_USER } from "../../redux/slice/authSlice";
+import {
+  REMOVE_ACTIVE_USER,
+  SET_ACTIVE_USER,
+} from "../../redux/slice/authSlice";
 
 // css
 import styles from "./Header.module.scss";
@@ -75,10 +78,8 @@ const Header = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log(user);
-        // const uid = user.uid;
-        // console.log(user.displayName);
         if (user.displayName === null) {
-          const curUser = user.email.slice(0, -10);
+          const curUser = user.email.substring(0, user.email.indexOf("@"));
           const uName = curUser.charAt(0).toUpperCase() + curUser.slice(1);
           setDisplayName(uName);
         } else {
@@ -93,6 +94,7 @@ const Header = () => {
         );
       } else {
         setDisplayName("");
+        dispatch(REMOVE_ACTIVE_USER());
       }
     });
   }, []);
@@ -136,7 +138,7 @@ const Header = () => {
               <NavLink to="/login" className={activeLink}>
                 Sign In
               </NavLink>
-              <a href="#">
+              <a href="#home">
                 <FaUserCircle size={16} />
                 hi, {displayName}
               </a>
