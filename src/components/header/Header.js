@@ -16,6 +16,10 @@ import { auth } from "../../firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// state management
+import { useDispatch } from "react-redux";
+import { SET_ACTIVE_USER } from "../../redux/slice/authSlice";
+
 // css
 import styles from "./Header.module.scss";
 
@@ -45,6 +49,9 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [displayName, setDisplayName] = useState("");
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -63,20 +70,32 @@ const Header = () => {
       });
   };
 
-  // monitor currently signed in user
+  // monitor ACTIVE user
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        console.log(user.displayName);
-        setDisplayName(user.displayName);
+        console.log(user);
+        // const uid = user.uid;
+        // console.log(user.displayName);
+        if (user.displayName === null) {
+          const curUser = user.email.slice(0, -10);
+          const uName = curUser.charAt(0).toUpperCase() + curUser.slice(1);
+          setDisplayName(uName);
+        } else {
+          setDisplayName(user.displayName);
+        }
+        dispatch(
+          SET_ACTIVE_USER({
+            email: user.email,
+            userName: user.displayName ? user.displayName : displayName,
+            userID: user.uid,
+          })
+        );
       } else {
         setDisplayName("");
       }
     });
   }, []);
-
-  const navigate = useNavigate();
 
   return (
     <header>
