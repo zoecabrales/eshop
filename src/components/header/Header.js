@@ -2,14 +2,14 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // icons
-import { FaShoppingCart, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaTimes, FaUserCircle } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
 // hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // firebase utils
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/config";
 
 // notif
@@ -43,6 +43,8 @@ const activeLink = ({ isActive }) => (isActive ? `${styles.active}` : ``);
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -60,6 +62,19 @@ const Header = () => {
         toast.error(error.message);
       });
   };
+
+  // monitor currently signed in user
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(user.displayName);
+        setDisplayName(user.displayName);
+      } else {
+        setDisplayName("");
+      }
+    });
+  }, []);
 
   const navigate = useNavigate();
 
@@ -102,6 +117,10 @@ const Header = () => {
               <NavLink to="/login" className={activeLink}>
                 Sign In
               </NavLink>
+              <a href="#">
+                <FaUserCircle size={16} />
+                hi, {displayName}
+              </a>
               <NavLink to="/register" className={activeLink}>
                 Sign Up
               </NavLink>
