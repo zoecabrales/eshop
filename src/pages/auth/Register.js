@@ -51,10 +51,9 @@ const Register = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
         setIsLoading(false);
         toast.success("Registration successful...");
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         toast.error(error.message);

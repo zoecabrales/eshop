@@ -25,6 +25,7 @@ import {
 
 // css
 import styles from "./Header.module.scss";
+import ShowOnLogin, { ShowOnLogout } from "../hiddenLinks/hiddenLink";
 
 const logo = (
   <div className={styles.logo}>
@@ -135,24 +136,38 @@ const Header = () => {
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
-              <NavLink to="/login" className={activeLink}>
-                Sign In
-              </NavLink>
-              <a href="#home">
-                <FaUserCircle size={16} />
-                hi, {displayName}
-              </a>
-              <NavLink to="/register" className={activeLink}>
-                Sign Up
-              </NavLink>
-              <NavLink to="/order-history" className={activeLink}>
-                My Orders
-              </NavLink>
-              <NavLink to="/" onClick={logoutUser}>
-                Logout
-              </NavLink>
+              <ShowOnLogout>
+                <NavLink to="/login" className={activeLink}>
+                  Sign In
+                </NavLink>
+              </ShowOnLogout>
+
+              <ShowOnLogin>
+                <a href="#home" style={{ color: "#ff7722" }}>
+                  <FaUserCircle size={16} />
+                  hi, {displayName}
+                </a>
+              </ShowOnLogin>
+
+              <ShowOnLogout>
+                <NavLink to="/register" className={activeLink}>
+                  Sign Up
+                </NavLink>
+              </ShowOnLogout>
+
+              <ShowOnLogin>
+                <NavLink to="/order-history" className={activeLink}>
+                  My Orders
+                </NavLink>
+              </ShowOnLogin>
+
+              <ShowOnLogin>
+                <NavLink to="/" onClick={logoutUser}>
+                  Logout
+                </NavLink>
+              </ShowOnLogin>
             </span>
-            {cart}
+            <ShowOnLogin>{cart}</ShowOnLogin>
           </div>
         </nav>
 
