@@ -29,12 +29,17 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setCShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const togglePasswordVisibility = () => {
+  const togglePassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPassword = () => {
+    setCShowPassword(!showCPassword);
   };
 
   const registerUser = (e) => {
@@ -46,10 +51,9 @@ const Register = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
         setIsLoading(false);
         toast.success("Registration successful...");
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -87,7 +91,7 @@ const Register = () => {
                 ></input>
                 <span
                   className={styles["password-toggle"]}
-                  onClick={togglePasswordVisibility}
+                  onClick={togglePassword}
                 >
                   {showPassword ? (
                     <RiEyeCloseLine size={22} />
@@ -96,15 +100,29 @@ const Register = () => {
                   )}
                 </span>
               </div>
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                required
-                value={cPassword}
-                onChange={(e) => {
-                  setCPassword(e.target.value);
-                }}
-              />
+
+              <div className={styles["password-wrapper"]}>
+                <input
+                  type={showCPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  required
+                  value={cPassword}
+                  onChange={(e) => {
+                    setCPassword(e.target.value);
+                  }}
+                ></input>
+                <span
+                  className={styles["password-toggle"]}
+                  onClick={toggleConfirmPassword}
+                >
+                  {showCPassword ? (
+                    <RiEyeCloseLine size={22} />
+                  ) : (
+                    <RiEyeLine size={22} />
+                  )}
+                </span>
+              </div>
+
               <button type="submit" className="--btn --btn-primary --btn-block">
                 Sign Up
               </button>

@@ -13,11 +13,19 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/config";
 
 // notif
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+// state management
+import { useDispatch } from "react-redux";
+import {
+  REMOVE_ACTIVE_USER,
+  SET_ACTIVE_USER,
+} from "../../redux/slice/authSlice";
 
 // css
 import styles from "./Header.module.scss";
+import ShowOnLogin, { ShowOnLogout } from "../hiddenLinks/hiddenLink";
 
 const logo = (
   <div className={styles.logo}>
@@ -45,6 +53,9 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [displayName, setDisplayName] = useState("");
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -63,20 +74,31 @@ const Header = () => {
       });
   };
 
-  // monitor currently signed in user
+  // monitor ACTIVE user
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        console.log(user.displayName);
-        setDisplayName(user.displayName);
+        console.log(user);
+        if (user.displayName === null) {
+          const curUser = user.email.substring(0, user.email.indexOf("@"));
+          const uName = curUser.charAt(0).toUpperCase() + curUser.slice(1);
+          setDisplayName(uName);
+        } else {
+          setDisplayName(user.displayName);
+        }
+        dispatch(
+          SET_ACTIVE_USER({
+            email: user.email,
+            userName: user.displayName ? user.displayName : displayName,
+            userID: user.uid,
+          })
+        );
       } else {
         setDisplayName("");
+        dispatch(REMOVE_ACTIVE_USER());
       }
     });
   }, []);
-
-  const navigate = useNavigate();
 
   return (
     <header>
@@ -114,24 +136,38 @@ const Header = () => {
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
-              <NavLink to="/login" className={activeLink}>
-                Sign In
-              </NavLink>
-              <a href="#">
-                <FaUserCircle size={16} />
-                hi, {displayName}
-              </a>
-              <NavLink to="/register" className={activeLink}>
-                Sign Up
-              </NavLink>
-              <NavLink to="/order-history" className={activeLink}>
-                My Orders
-              </NavLink>
-              <NavLink to="/" onClick={logoutUser}>
-                Logout
-              </NavLink>
+              <ShowOnLogout>
+                <NavLink to="/login" className={activeLink}>
+                  Sign In
+                </NavLink>
+              </ShowOnLogout>
+
+              <ShowOnLogin>
+                <a href="#home" style={{ color: "#ff7722" }}>
+                  <FaUserCircle size={16} />
+                  hi, {displayName}
+                </a>
+              </ShowOnLogin>
+
+              <ShowOnLogout>
+                <NavLink to="/register" className={activeLink}>
+                  Sign Up
+                </NavLink>
+              </ShowOnLogout>
+
+              <ShowOnLogin>
+                <NavLink to="/order-history" className={activeLink}>
+                  My Orders
+                </NavLink>
+              </ShowOnLogin>
+
+              <ShowOnLogin>
+                <NavLink to="/" onClick={logoutUser}>
+                  Logout
+                </NavLink>
+              </ShowOnLogin>
             </span>
-            {cart}
+            <ShowOnLogin>{cart}</ShowOnLogin>
           </div>
         </nav>
 
