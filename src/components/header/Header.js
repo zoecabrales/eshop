@@ -2,7 +2,9 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // route component
-import AdminOnlyRoute from "../adminOnlyRoute/AdminOnlyRoute";
+import AdminOnlyRoute, {
+  AdminOnlyLink,
+} from "../adminOnlyRoute/AdminOnlyRoute";
 
 // icons
 import { FaShoppingCart, FaTimes, FaUserCircle } from "react-icons/fa";
@@ -126,11 +128,13 @@ const Header = () => {
               {logo}
               <FaTimes size={20} onClick={hideMenu} />
             </li>
-            <AdminOnlyRoute>
+            <AdminOnlyLink>
               <li>
-                <button className="--btn-primary">Admin</button>
+                <Link to="/admin/home">
+                  <button className="--btn-primary">Admin</button>
+                </Link>
               </li>
-            </AdminOnlyRoute>
+            </AdminOnlyLink>
             <li>
               <NavLink to="/" className={activeLink}>
                 Home
