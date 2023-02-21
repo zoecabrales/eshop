@@ -2,9 +2,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // route component
-import AdminOnlyRoute, {
-  AdminOnlyLink,
-} from "../adminOnlyRoute/AdminOnlyRoute";
+import { AdminOnlyLink } from "../adminOnlyRoute/AdminOnlyRoute";
 
 // icons
 import { FaShoppingCart, FaTimes, FaUserCircle } from "react-icons/fa";
