@@ -21,7 +21,7 @@ import Loader from "../../loader/Loader";
 import { Link } from "react-router-dom";
 import styles from "./ViewProducts.module.scss";
 import { deleteObject } from "firebase/storage";
-import { async } from "@firebase/util";
+import Notiflix from "notiflix";
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
@@ -55,6 +55,30 @@ const ViewProducts = () => {
     }
   };
 
+  const confirmDelete = (id, imageUrl) => {
+    Notiflix.Confirm.show(
+      "Delete Product!!!",
+      "Are you sure you want to delete?",
+      "Delete",
+      "Cancel",
+      function okCb() {
+        deleteProduct(id, imageUrl);
+      },
+      function cancelCb() {
+        console.log("Delete Cancelled");
+      },
+      {
+        width: "350px",
+        height: "50px",
+        borderRadius: "8px",
+        titleColor: "orangered",
+        okButtonColor: "white",
+        okButtonBackground: "red",
+        cssAnimationStyle: "fade",
+      }
+    );
+  };
+
   const deleteProduct = async (id, imageUrl) => {
     try {
       await deleteDoc(doc(db, "products", id));
@@ -67,6 +91,7 @@ const ViewProducts = () => {
       toast.error(error.message);
     }
   };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -110,7 +135,7 @@ const ViewProducts = () => {
                       <FaTrashAlt
                         size={20}
                         color="red"
-                        onClick={() => deleteProduct(id, imageUrl)}
+                        onClick={() => confirmDelete(id, imageUrl)}
                       />
                     </td>
                   </tr>
